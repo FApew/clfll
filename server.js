@@ -19,6 +19,12 @@ app.get("/src/script.js", (req, res) => {
     res.sendFile(__dirname + "/src/script.js") 
 })
 
+for (let i = 0; i < 1; i++) {
+    app.get(`/src/assets/img/${i}.png`, (req, res) => {
+        res.sendFile(__dirname + `/src/assets/img/${i}.png`)
+    })
+}
+
 app.listen(3000, () => {
     console.log("App listening on port " + 3000)
 })
