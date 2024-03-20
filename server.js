@@ -11,12 +11,12 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html") 
 })
 
-app.get("/src", (req, res) => {
-    res.sendFile(__dirname + "/style.css") 
+app.get("/src/assets/style.css", (req, res) => {
+    res.sendFile(__dirname + "/src/assets/style.css") 
 })
 
-app.get("/src", (req, res) => {
-    res.sendFile(__dirname + "/script.js") 
+app.get("/src/script.js", (req, res) => {
+    res.sendFile(__dirname + "/src/script.js") 
 })
 
 app.listen(3000, () => {
