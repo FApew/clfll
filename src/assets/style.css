@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+#app {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 5% 1fr;
+    grid-template-columns: 100%;
+}
+
+#main {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#bar {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 100%;
+    grid-template-columns: 3% 10% 1fr;
+}
+
+#logoBox {
+    position: relative;
+    height: 100%;
+    aspect-ratio: 1;/*altezza = lunghezza*/
+    justify-self: center;/*si mette al centro*/
+}
+
+#title {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: start;/*mette al centro quello che ha dentro horizontal*/
+    align-items: center;
+    font-size: 3.7vh;
+}

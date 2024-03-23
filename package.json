@@ -1,0 +1,21 @@
+{
+  "name": "clfll",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fapew",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.1",
+    "path": "^0.12.7",
+    "three": "^0.162.0",
+    "url": "^0.11.3"
+  },
+  "devDependencies": {
+    "vite": "^5.2.4"
+  }
+}
