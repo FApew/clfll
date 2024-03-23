@@ -12,6 +12,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/src/main.js", (req, res) => {
+    res.type("application/javascript")
     res.sendFile(__dirname + "/src/main.js")
 })
 
