@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import * as CANNON from "cannon-es"
+import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/+esm'
 import WebGL from 'three/addons/capabilities/WebGL.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Pos } from "./assets/js/data.js"
