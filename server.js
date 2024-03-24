@@ -41,6 +41,11 @@ for (let i = 0; i < 1; i++) {
         res.sendFile(__dirname + `/src/assets/model/${i}.glb`)
     })
 }
+for (let i = 0; i < 1; i++) {
+    app.get(`/src/assets/img/${i}.png`, (req, res) => {
+        res.sendFile(__dirname + `/src/assets/img/${i}.png`)
+    })
+}
 
 app.listen(8080, () => {
     console.log("App listening on https://localhost:8080/");

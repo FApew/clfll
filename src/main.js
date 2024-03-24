@@ -1,20 +1,21 @@
 import * as THREE from "three"
 import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/+esm'
 import WebGL from 'three/addons/capabilities/WebGL.js'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { Pos } from "./assets/js/data.js"
 import { robot } from "./assets/js/robot.js"
-import { dirLight, hemiLight } from "./assets/js/lights.js";
+import { dirLight, hemiLight } from "./assets/js/lights.js"
+//import CannonDebugger from "cannon-es-debugger"
 
 const container = document.getElementById("main")
 
 const scene = new THREE.Scene()
 
-let speed = {rot: .5, mov:8}
+let speed = {rot: .5, mov:6}
 
 function init() {
     if (WebGL.isWebGLAvailable()) {
-        let vel = {w: 0, a: 0, s: 0, d: 0}
+        let vel = {w: 0, a: 0, s: 0, d: 0, shift: 0}
 
         const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 1000)
         camera.position.set(0, 56, 100)
@@ -28,7 +29,7 @@ function init() {
 
         const controls = new OrbitControls( camera, renderer.domElement)
         controls.enableRotate = false
-        controls.screenSpacePanning = false;
+        controls.screenSpacePanning = false
         controls.enableZoom = false
 
         const dirBox = new THREE.Group()
@@ -41,10 +42,13 @@ function init() {
         const world = new CANNON.World({
             gravity: new CANNON.Vec3(0, -9.806, 0)
         })
-
+        let size = 200
         const plane = new THREE.Mesh(
-            new THREE.BoxGeometry(16000, 0.01, 16000),
-            new THREE.MeshStandardMaterial({ color: 0x29c1e7 })
+            new THREE.BoxGeometry(size, 0.01, size/16*9),
+            new THREE.MeshStandardMaterial({ 
+                map: new THREE.TextureLoader().load("../src/assets/img/0.png"),
+                flatShading: true
+            })
         )
         plane.receiveShadow = true
         scene.add(plane)
@@ -101,6 +105,8 @@ function init() {
                 vel.s = 1
             } else if (k === "d") {
                 vel.d = 1
+            } else if (k === "Shift") {
+                vel.shift = 1
             }
         })
 
@@ -114,7 +120,10 @@ function init() {
                 vel.s = 0
             } else if (k === "d") {
                 vel.d = 0
+            } else if (k === "Shift") {
+                vel.shift = 0
             }
+            
         })
 
         const startPos = camera.position.clone()
@@ -123,37 +132,44 @@ function init() {
         cRobot.material = robotMaterial
         cPlane.material = robotMaterial
 
+        //const cannonDebugger = new CannonDebugger(scene, world, {})
+
         function animate() {
             dirBox.position.set(camera.position.x - startPos.x, camera.position.y - startPos.y, camera.position.z - startPos.z);
             dirLight.target.position.set(camera.position.x - startPos.x, camera.position.y - startPos.y, camera.position.z - startPos.z)
 
             if ((vel.w || vel.a) || (vel.s || vel.d)) {
-                cRobot.material.friction = 0
-                cPlane.material.friction = 0
+                cRobot.material.friction = 0.1
+                cPlane.material.friction = 0.1
             } else {
                 cPlane.material.friction = 0.5
                 cRobot.material.friction = 0.5
             }
+
+            let k = 1
+
+            if (vel.shift) {
+                k *= 2
+            }
             
-            if (vel.d) {
+            if (vel.d && !vel.shift) {
                 cRobot.angularVelocity.y = -speed.rot
-            } else if (vel.a) {
+            } else if (vel.a && !vel.shift) {
                 cRobot.angularVelocity.y = speed.rot
             } else {
                 cRobot.angularVelocity.y = 0
             }
 
-            let angle = robot.rotation.y, k = 1
+            let angle = robot.rotation.y
             if (Math.round(Math.abs(robot.rotation.x)*100)/100 != Math.round(Math.PI*100)/100) {
                 angle = -robot.rotation.y
-                k = -1
+                k *= -1
             }
             
             if (vel.w) {
                 cRobot.velocity.x = -speed.mov * Math.sin(angle)*k
                 cRobot.velocity.z = speed.mov * Math.cos(angle)*k
-            }
-            if (vel.s) {
+            } else if (vel.s) {
                 cRobot.velocity.x = speed.mov * Math.sin(angle)*k
                 cRobot.velocity.z = -speed.mov * Math.cos(angle)*k
             }
