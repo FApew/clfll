@@ -10,6 +10,9 @@
   "author": "fapew",
   "license": "ISC",
   "dependencies": {
+    "cannon": "^0.6.2",
+    "cannon-es": "^0.20.0",
+    "cannon-es-debugger": "^1.0.0",
     "express": "^4.19.1",
     "path": "^0.12.7",
     "three": "^0.162.0",

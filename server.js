@@ -24,9 +24,23 @@ app.get("/src/assets/style.css", (req, res) => {
     res.sendFile(__dirname + "/src/assets/style.css")
 })
 
-app.get("/src/assets/model/0.glb", (req, res) => {
-    res.sendFile(__dirname + "/src/assets/model/0.glb")
+app.get("/src/assets/js/data.js", (req, res) => {
+    res.sendFile(__dirname + "/src/assets/js/data.js")
 })
+
+app.get("/src/assets/js/lights.js", (req, res) => {
+    res.sendFile(__dirname + "/src/assets/js/lights.js")
+})
+
+app.get("/src/assets/js/robot.js", (req, res) => {
+    res.sendFile(__dirname + "/src/assets/js/robot.js")
+})
+
+for (let i = 0; i < 1; i++) {
+    app.get(`/src/assets/model/${i}.glb`, (req, res) => {
+        res.sendFile(__dirname + `/src/assets/model/${i}.glb`)
+    })
+}
 
 app.listen(8080, () => {
     console.log("App listening on https://localhost:8080/");
