@@ -5,7 +5,6 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Pos } from "./assets/js/data.js"
 import { robot } from "./assets/js/robot.js"
 import { dirLight, hemiLight } from "./assets/js/lights.js";
-import CannonDebugger from "cannon-es-debugger";
 
 const container = document.getElementById("main")
 
@@ -119,8 +118,6 @@ function init() {
         })
 
         const startPos = camera.position.clone()
-
-        const cannonDebugger = new CannonDebugger(scene, world)
 
         const robotMaterial = new CANNON.Material()
         cRobot.material = robotMaterial
