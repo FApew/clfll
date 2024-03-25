@@ -3,6 +3,10 @@ body {
     overflow: hidden;
 }
 
+a {
+    color:"white";
+}
+
 #app {
     position: absolute;
     width: 100%;

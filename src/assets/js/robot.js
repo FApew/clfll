@@ -6,7 +6,6 @@ const loader = new GLTFLoader()
 export let robot = new THREE.Group()
 loader.load("../src/assets/model/0.glb", (gltf) => {
     let obj = gltf.scene;
-    obj.position.set(0, 0, 0);
     obj.scale.set(1, 1, 1);
     obj.traverse((child) => {
         if (child.isMesh) {
@@ -22,5 +21,5 @@ loader.load("../src/assets/model/0.glb", (gltf) => {
     robot.add(obj)
 })
 
-robot.position.y = 20
-robot.rotation.set(0,Math.PI*5/6,0)
+robot.position.set(-80, 50, 40)
+robot.rotation.set(0,Math.PI*-1/4,0)
