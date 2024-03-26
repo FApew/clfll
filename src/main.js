@@ -6,13 +6,13 @@ import { Pos } from "./assets/js/data.js"
 import { robot } from "./assets/js/robot.js"
 import { dirLight, hemiLight } from "./assets/js/lights.js"
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-//import CannonDebugger from "cannon-es-debugger"
+import CannonDebugger from "cannon-es-debugger"
 
 const container = document.getElementById("main")
 
 const scene = new THREE.Scene()
 
-const sphereRadius = 7
+const sphereRadius = 7, mNumber = 5
 
 const speed = {rot: .5, mov:6}
 
@@ -67,7 +67,23 @@ function init() {
 
         const loader = new GLTFLoader()
 
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < mNumber; i++) {
+            let cMiss
+            if (Pos[i].s) {
+                cMiss = new CANNON.Body({
+                    type: CANNON.Body.STATIC,
+                    shape: new CANNON.Box( new CANNON.Vec3(Pos[i].b.x, Pos[i].b.y, Pos[i].b.z)),
+                })
+            } else {
+                cMiss = new CANNON.Body({
+                    type: CANNON.Body.DYNAMIC,
+                    shape: new CANNON.Box( new CANNON.Vec3(Pos[i].b.x, Pos[i].b.y, Pos[i].b.z)),
+                    mass: 1
+                })
+            }
+
+            
+
             loader.load(`../src/assets/model/${i+1}.glb`, (gltf) => {
                 let obj = gltf.scene;
                 obj.scale.set(1, 1, 1);
@@ -84,19 +100,13 @@ function init() {
                         child.receiveShadow = true
                     }
                 })
+                cMiss.position.copy(obj.position)
+                cMiss.position.y = Pos[i].b.y/2
+                cMiss.quaternion.copy(obj.quaternion)
+                world.addBody(cMiss)
                 missions.add(obj)
             })
-
-            const cMiss = new CANNON.Body({
-                type: CANNON.Body.STATIC,
-                shape: new CANNON.Box( new CANNON.Vec3(Pos[i].b.x, Pos[i].b.y, Pos[i].b.z))
-            })
-            cMiss.position.y = Pos[i].b.y/2
-            world.addBody(cMiss)
         }
-
-        
-
 
         scene.add(missions)
         missions.children.forEach((child) => {
@@ -116,7 +126,7 @@ function init() {
         const cpalla = new CANNON.Body({
             shape: new CANNON.Sphere(sphereRadius),
             position: new CANNON.Vec3(palla.position.x, palla.position.y, palla.position.z),
-            mass: sphereRadius*2
+            mass: sphereRadius/2
         })
         world.addBody(cpalla)
 
@@ -125,7 +135,7 @@ function init() {
         const cRobot = new CANNON.Body({
             shape: new CANNON.Box(new CANNON.Vec3(10, 6, 9.225)),
             position: new CANNON.Vec3(robot.position.x,robot.position.y,robot.position.z),
-            mass: 5
+            mass: 2
         })
         cRobot.quaternion.setFromEuler(0,robot.rotation.y,0)
         world.addBody(cRobot)
@@ -175,7 +185,7 @@ function init() {
         cRobot.material = robotMaterial
         cPlane.material = robotMaterial
 
-        //const cannonDebugger = new CannonDebugger(scene, world, {})
+        const cannonDebugger = new CannonDebugger(scene, world, {})
 
         function animate() {
             dirBox.position.set(camera.position.x - startPos.x, camera.position.y - startPos.y, camera.position.z - startPos.z);
@@ -232,7 +242,7 @@ function init() {
             robot.position.copy(cRobot.position)
             robot.quaternion.copy(cRobot.quaternion)
 
-            //cannonDebugger.update()
+            cannonDebugger.update()
 
             renderer.render(scene, camera)
             requestAnimationFrame( animate )
