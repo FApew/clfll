@@ -6,6 +6,6 @@ schoolButton.addEventListener("click", () => {
 
 const teamButton = document.getElementById("teamButton")
 teamButton.addEventListener("click", () => {
-    window.open("./assets/html/Squadra")
+    window.open("../src/assets/html/Static.html")
 })
 

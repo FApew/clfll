@@ -1,0 +1,30 @@
+#sideBar {
+    position: absolute;
+    background-color: aqua;
+    height: 95%;
+    top: 10%;
+    width: 50px;
+    transition: all 0.5s ease-in-out;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 50px;
+    row-gap: 5px;
+    overflow: hidden;  
+}
+
+.navItem {
+    width: 250px;
+    height: 50px;
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    grid-template-rows: 100%;
+}
+
+
+
+.bTxt{
+    font-family: "Comfortaa", sans-serif;
+    color: white;
+    display: grid;
+    place-items: center;
+}

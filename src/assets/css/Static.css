@@ -4,26 +4,16 @@ body {
     overflow: hidden;
 }
 
-a {
-    color:"white";
-}
-
 #app {
     position: absolute;
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-rows: 5% 1fr;
+    grid-template-rows: 10% 1fr;
     grid-template-columns: 100%;
 }
 
-#main {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-#bar {
+#topBar {
     position: relative;
     background-color: rgb(27, 100, 100);
     color: white;
@@ -31,7 +21,7 @@ a {
     height: 100%;
     display: grid;
     grid-template-rows: 100%;
-    grid-template-columns: 3% 10% 1fr;
+    grid-template-columns: 3% 15% 1fr;
 }
 
 #logoBox {
@@ -61,46 +51,12 @@ a {
     
 }
 
-#staticLink {
-    position: relative;
+
+#main {
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    font-size: 2.5vh;
-   
+    display: grid;
+    margin-left: 50px;
+    background-color: white;
 }
 
-#schooLink {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    
-}
-
-#schoolButton {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5vh;
-    font-size: 2.5vh;
-    background-color: rgb(30, 146, 127);
-    border: 0;
-}
-
-#teamButton {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5vh;
-    font-size: 2.5vh;
-    background-color: rgb(30, 146, 127);
-    border: 0;
-}
