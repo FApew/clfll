@@ -36,7 +36,7 @@ app.get("/src/assets/js/robot.js", (req, res) => {
     res.sendFile(__dirname + "/src/assets/js/robot.js")
 })
 
-for (let i = 0; i < 2; i++) {
+for (let i = 0; i < 17; i++) {
     app.get(`/src/assets/model/${i}.glb`, (req, res) => {
         res.sendFile(__dirname + `/src/assets/model/${i}.glb`)
     })
