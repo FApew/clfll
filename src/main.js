@@ -170,6 +170,19 @@ function init() {
             
         })
 
+        
+        //reset button
+        document.addEventListener("keypress", (e) => {
+            let k = e.key
+
+            if (k === "r")
+            {
+                cRobot.position.set(robot.position.x,robot.position.y+10,robot.position.z)
+                cRobot.quaternion.setFromEuler(0,Math.PI*-1/4,0)
+            }    
+        }) 
+
+
         const startPos = camera.position.clone()
 
         const robotMaterial = new CANNON.Material()
@@ -226,6 +239,7 @@ function init() {
                 camera.rotation.set(-0.4636,0,0)
             }
 
+           
             world.step(0.1)
 
             palla.position.copy(cpalla.position)
