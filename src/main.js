@@ -18,6 +18,7 @@ const speed = {rot: .5, mov:6}
 
 function init() {
     if (WebGL.isWebGLAvailable()) {
+        alert("wasd for move the robot");
         let vel = {w: 0, a: 0, s: 0, d: 0, shift: 0}
 
         const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 1000)
