@@ -2,7 +2,7 @@
     position: absolute;
     background-color: aqua;
     height: 95%;
-    top: 10%;
+    top: 5%;
     width: 50px;
     transition: all 0.5s ease-in-out;
     display: grid;
