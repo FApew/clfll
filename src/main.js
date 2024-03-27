@@ -6,13 +6,13 @@ import { Pos } from "./assets/js/data.js"
 import { robot } from "./assets/js/robot.js"
 import { dirLight, hemiLight } from "./assets/js/lights.js"
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import CannonDebugger from "cannon-es-debugger"
+//import CannonDebugger from "cannon-es-debugger"
 
 const container = document.getElementById("main")
 
 const scene = new THREE.Scene()
 
-const sphereRadius = 7, mNumber = 5
+const mNumber = 4
 
 const speed = {rot: .5, mov:6}
 
@@ -39,6 +39,9 @@ function init() {
         dirBox.add(dirLight)
         scene.add(dirBox)
         scene.add(dirLight.target)
+
+        const helper = new THREE.CameraHelper(dirLight.shadow.camera)
+        scene.add(helper)
 
         scene.add(hemiLight)
 
@@ -67,68 +70,47 @@ function init() {
 
         const loader = new GLTFLoader()
 
+        let cMissArr = [], missArr = []
+
         for (let i = 0; i < mNumber; i++) {
-            let cMiss
-            if (Pos[i].s) {
-                cMiss = new CANNON.Body({
-                    type: CANNON.Body.STATIC,
-                    shape: new CANNON.Box( new CANNON.Vec3(Pos[i].b.x, Pos[i].b.y, Pos[i].b.z)),
-                })
-            } else {
-                cMiss = new CANNON.Body({
-                    type: CANNON.Body.DYNAMIC,
-                    shape: new CANNON.Box( new CANNON.Vec3(Pos[i].b.x, Pos[i].b.y, Pos[i].b.z)),
-                    mass: 1
-                })
-            }
-
-            
-
+            let Miss = new THREE.Group()
             loader.load(`../src/assets/model/${i+1}.glb`, (gltf) => {
-                let obj = gltf.scene;
-                obj.scale.set(1, 1, 1);
-                obj.position.set(Pos[i].p.x, 0, Pos[i].p.z)
-                obj.rotation.y = Pos[i].r,
+                const obj = gltf.scene
                 obj.traverse((child) => {
                     if (child.isMesh) {
-                        if (child.material) {
-                            child.material = new THREE.MeshStandardMaterial({ color: child.material.color, map: child.material.map })
-                            child.material.side = THREE.DoubleSide
-                        }
-                        child.geometry.computeVertexNormals()
+                        const newMaterial = new THREE.MeshStandardMaterial({
+                            color: child.material.color,
+                            map: child.material.map,
+                            side: THREE.DoubleSide
+                        })
+                        child.material = newMaterial
                         child.castShadow = true
                         child.receiveShadow = true
+                        child.geometry.computeVertexNormals()
                     }
                 })
-                cMiss.position.copy(obj.position)
-                cMiss.position.y = Pos[i].b.y/2
-                cMiss.quaternion.copy(obj.quaternion)
+                Miss.add(obj)
+                Miss.position.set(Pos[i].p.x, Pos[i].b.y/2, Pos[i].p.z)
+                Miss.rotation.y = Pos[i].r
+                missArr[i] = Miss
+                missions.add(Miss)
+
+                const cMiss = new CANNON.Body({
+                    type: Pos[i].s ? CANNON.Body.STATIC : CANNON.Body.DYNAMIC,
+                    shape: new CANNON.Box(new CANNON.Vec3(Pos[i].b.x, Pos[i].b.y, Pos[i].b.z)),
+                    position: new CANNON.Vec3(Pos[i].p.x, Pos[i].b.y, Pos[i].p.z),
+                    material: new CANNON.Material({friction: 0.1}),
+                    mass: Pos[i].s ? 0 : .5
+                })
+                cMiss.quaternion.setFromEuler(0, Pos[i].r, 0)
+            
                 world.addBody(cMiss)
-                missions.add(obj)
+            
+                cMissArr[i] = cMiss
             })
         }
 
         scene.add(missions)
-        missions.children.forEach((child) => {
-            console.log(child.position)
-        })
-
-        const palla = new THREE.Mesh(
-            new THREE.SphereGeometry(sphereRadius),
-            new THREE.MeshStandardMaterial({color: 0xa17fff})
-        )
-        palla.position.x = 20
-        palla.position.y = sphereRadius+5
-        palla.position.z = 0
-        palla.castShadow = true
-        scene.add(palla)
-
-        const cpalla = new CANNON.Body({
-            shape: new CANNON.Sphere(sphereRadius),
-            position: new CANNON.Vec3(palla.position.x, palla.position.y, palla.position.z),
-            mass: sphereRadius/2
-        })
-        world.addBody(cpalla)
 
         scene.add(robot)
 
@@ -185,11 +167,11 @@ function init() {
         cRobot.material = robotMaterial
         cPlane.material = robotMaterial
 
-        const cannonDebugger = new CannonDebugger(scene, world, {})
+        //const cannonDebugger = new CannonDebugger(scene, world, {})
 
         function animate() {
-            dirBox.position.set(camera.position.x - startPos.x, camera.position.y - startPos.y, camera.position.z - startPos.z);
-            dirLight.target.position.set(camera.position.x - startPos.x, camera.position.y - startPos.y, camera.position.z - startPos.z)
+            dirBox.position.set(camera.position.x - startPos.x - 80, camera.position.y - startPos.y + 56, camera.position.z - startPos.z + 140);
+            dirLight.target.position.set(camera.position.x - startPos.x - 80, camera.position.y - startPos.y + 56, camera.position.z - startPos.z + 140)
 
             if ((vel.w || vel.a) || (vel.s || vel.d)) {
                 cRobot.material.friction = 0.1
@@ -237,12 +219,18 @@ function init() {
 
             world.step(0.1)
 
-            palla.position.copy(cpalla.position)
-            palla.quaternion.copy(cpalla.quaternion)
             robot.position.copy(cRobot.position)
             robot.quaternion.copy(cRobot.quaternion)
 
-            cannonDebugger.update()
+            for (let i = 0; i < missions.children.length; i++) {
+                try {
+                    let obj = missArr[i], cObj = cMissArr[i]
+                    obj.position.copy(cObj.position)
+                    obj.quaternion.copy(cObj.quaternion)
+                } catch (e) {}
+            }
+            
+            //cannonDebugger.update()
 
             renderer.render(scene, camera)
             requestAnimationFrame( animate )
