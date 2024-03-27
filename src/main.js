@@ -178,7 +178,7 @@ function init() {
             if (k === "r")
             {
                 cRobot.position.set(robot.position.x,robot.position.y+10,robot.position.z)
-                cRobot.quaternion.setFromEuler(0,Math.PI*-1/4,0)
+                cRobot.quaternion.setFromEuler(0,robot.rotation.y,0)
             }    
         }) 
 

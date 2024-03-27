@@ -1,0 +1,19 @@
+#newsBox{
+    background-color: brown;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: 100px;
+    row-gap: 5%;
+    column-gap: 5%;
+}
+
+.news{
+    border-radius: 10px;
+    background-color: yellow;
+    width: 100%;
+    height: 100%;
+}
+
+.Title{
+    font-size: 10px;
+}
